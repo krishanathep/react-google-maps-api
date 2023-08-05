@@ -7,6 +7,7 @@ import L from 'leaflet';
 // fix marker files not found
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import axios from 'axios'
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -17,33 +18,23 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const Map = () => {
 
-  const position = [
-  {
-    "title": "ร้านอาหาร 1",
-    "lat": 13.806032270422516,
-    "long": 100.53752731937284,
-  },
-  {
-    "title": "ร้านอาหาร 2",
-    "lat": 13.823561896850025,
-    "long": 100.59372011893235,
-  },
-  {
-    "title": "ร้านอาหาร 3",
-    "lat": 13.871633725734497,
-    "long": 100.52999507298125,
-  },
-  {
-    "title": "ร้านอาหาร 4",
-    "lat": 13.82063172192801,
-    "long": 100.580463517319,
-  },
-  {
-    "title": "ร้านอาหาร 5",
-    "lat": 13.889965042458334,
-    "long": 100.43695460756949,
-  },
-];
+  const [restaurant, setRestaurant] = useState([])
+
+  // url barck-end api
+  const APP_API = 'https://full-stack-app.com/laravel_restaurant_api/public/api/restaurants'
+
+  // Get restaurant api from url
+  const fetData = async() => {
+    await axios.get(APP_API)
+      .then((res)=>{
+        console.log(res.data)
+        setRestaurant(res.data.restaurants)
+      })
+  }
+
+  useEffect(()=>{
+    fetData()
+  },[])
 
   return (
     <>
@@ -60,8 +51,8 @@ const Map = () => {
           />
 
           {/* create marker from api */}
-          {position.map((item)=>
-            <Marker  position={[item.lat,item.long]}>
+          {restaurant.map((item)=>
+            <Marker key={item.id} position={[item.latitude,item.longitude]}>
               <Popup>{item.title}</Popup>
             </Marker>
           )}

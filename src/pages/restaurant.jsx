@@ -1,6 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const restaurant = () => {
+  const [restaurants, setRestaurants] = useState([]);
+  const [rest, setRest] = useState('')
+  const [dataFilter] = useState(['title', 'category'])
+
+  // url barck-end api
+  const APP_API =
+    "https://full-stack-app.com/laravel_restaurant_api/public/api/restaurants";
+
+  // Get restaurant api from url
+  const fetchData = async () => {
+    await axios.get(APP_API).then((res) => {
+      console.log(res.data);
+      setRestaurants(res.data.restaurants);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const searchRestaurant =(restaurants)=>{
+    return restaurants.filter((item)=>{
+      return dataFilter.some((filter)=>{
+       return item[filter].indexOf(rest)>-1
+      })
+    })
+  }
+
   return (
     <div className="content-wrapper">
       <div className="content">
@@ -13,167 +42,29 @@ const restaurant = () => {
                     <input
                       className="form-control"
                       type="text"
+                      name="search"
+                      value={rest}
+                      onChange={(e)=>setRest(e.target.value)}
                       placeholder="Search..."
                     />
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 1</h4>
-                        <p className="card-text">Some example text.</p>
+                  {searchRestaurant(restaurants).map((item) => (
+                    <div className="col-md-3" key={item.id}>
+                      <div className="card">
+                        <img
+                          className="card-img-top"
+                          src={item.image}
+                          alt="Card image"
+                        />
+                        <div className="card-body">
+                          <h4 className="card-title">{item.title}</h4>
+                          <p className="card-text text-muted">{item.description.substring(0, 70)}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1322184/pexels-photo-1322184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 2</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1346132/pexels-photo-1346132.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 3</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1861785/pexels-photo-1861785.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 4</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 5</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1322184/pexels-photo-1322184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 6</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1346132/pexels-photo-1346132.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 7</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 8</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1322184/pexels-photo-1322184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 9</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1346132/pexels-photo-1346132.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 10</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 11</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div class="card">
-                      <img
-                        className="card-img-top"
-                        src="https://images.pexels.com/photos/1322184/pexels-photo-1322184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Card image"
-                      />
-                      <div className="card-body">
-                        <h4 className="card-title">ร้านอาหาร 22</h4>
-                        <p className="card-text">Some example text.</p>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
